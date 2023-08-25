@@ -1,28 +1,3 @@
-Last login: Fri Aug 25 14:45:16 on ttys001
-
-The default interactive shell is now zsh.
-To update your account to use zsh, please run `chsh -s /bin/zsh`.
-For more details, please visit https://support.apple.com/kb/HT208050.
-cab-wsm-0983164:~ 20979195$ cd c++
-cab-wsm-0983164:c++ 20979195$ ls
-cormen		hello		laaksonen	mesyarik	tokenizer
-cab-wsm-0983164:c++ 20979195$ cd tokenizer/
-cab-wsm-0983164:tokenizer 20979195$ git init
-hint: Using 'master' as the name for the initial branch. This default branch name
-hint: is subject to change. To configure the initial branch name to use in all
-hint: of your new repositories, which will suppress this warning, call:
-hint: 
-hint: 	git config --global init.defaultBranch <name>
-hint: 
-hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-hint: 'development'. The just-created branch can be renamed via this command:
-hint: 
-hint: 	git branch -m <name>
-Initialized empty Git repository in /Users/20979195/c++/tokenizer/.git/
-cab-wsm-0983164:tokenizer 20979195$ ls
-\		corpus.txt	tokenizer	tokenizer.cpp
-cab-wsm-0983164:tokenizer 20979195$ vim tokenizer.cpp 
-
 #include <iostream>ш
 #include <fstream>
 #include <set>
