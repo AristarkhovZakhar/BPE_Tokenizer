@@ -145,9 +145,6 @@ void Tokenizer::fit(std::vector<std::wstring> corpus) {
     make_splits();
 
     while (vocab.size() < vocab.vocab_size) {
-#ifdef DEBUG
-        std::cout << vocab.size() << std::endl;
-#endif
         compute_pair_freqs();
         std::pair<std::wstring, std::wstring> most_common_pair = std::make_pair(L"", L"");
         int max_freq = 0;
@@ -273,7 +270,7 @@ void Tokenizer::file_to_input_ids(std::wstring file_path) {
 }
 
 int main() {
-    size_t vocab_sz = 500;
+    size_t vocab_sz = 200;
     Vocab vocab(vocab_sz);
     Tokenizer tokenizer(vocab);
     std::vector<std::wstring> corpus = tokenizer.make_corpus_from_file(L"corpus.txt");
