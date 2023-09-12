@@ -1,0 +1,40 @@
+#include <iostream>
+#include <fstream>
+#include <set>
+
+
+using namespace std;
+
+class Tokenizer {
+private:
+    unsigned int vocab_size;
+    set<string> vocab;
+   // map<string, int> parse_from_yaml(string& file_path);
+public:
+    Tokenizer(unsigned int vocab_size_): vocab_size(vocab_size_) {};
+    Tokenizer(unsigned int vocab_size_, set<string> vocab_):
+        vocab_size(vocab_size_), vocab(vocab_) {};
+    vector<string> make_corpus_from_file(const string& file_path);
+    void fit(vector<vector<string> >& corpus);
+    void from_pretrained();
+    vector<int> tokenize(const string& text);
+    vector<vector<int> > tokenize_corpus(vector<string>);
+};
+
+vector<string> Tokenizer::make_corpus_from_file(const string& file_path) {
+    ifstream corpus_file(file_path);
+    string buf;
+    vector<string> corpus;
+    while(getline(corpus_file, buf)) {
+        corpus.push_back(buf);
+    };
+    return corpus;
+}
+ int main() {
+     int vocab_size = 10;
+     string file_path = "/Users/20979195/c++/tokenizer/corpus.txt";
+     Tokenizer tokenizer = Tokenizer(vocab_size);
+     vector<string> corpus = tokenizer.make_corpus_from_file(file_path);
+     for (auto c: corpus) {
+         cout << c << "\n";
+};
