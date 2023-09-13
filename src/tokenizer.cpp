@@ -6,11 +6,23 @@
 #include <map>
 #include <set>
 #include <wchar.h>
+#include <ctime>
 
 std::wstring Tokenizer::get_string(wchar_t c) {
-    std::wstring s(1, c);
-    return s;
+    if (vocab.alphabet.contains(c) && char_to_string.contains(c)) {
+        return char_to_string[c];
+    }
+    else if (vocab.alphabet.contains(c) && !char_to_string.contains(c)) {
+        std::wstring s(1, c);
+        char_to_string[c] = s;
+        return s;
+    }
+    else {
+        std::wstring s(1, c);
+        return s;
+    }
 }
+
 
 Tokenizer::Tokenizer(Vocab vocab_) : vocab(vocab_) {
     size_t id = 0;
@@ -22,11 +34,11 @@ Tokenizer::Tokenizer(Vocab vocab_) : vocab(vocab_) {
 }
 
 template <typename T>
-std::string Tokenizer::vector_to_string(std::vector<T> ids) {
+std::string Tokenizer::vector_to_string(std::vector<T>& ids) {
     std::string out;
     out += "[";
-    int s = ids.size();
-    for (int i = 0; i < s; i++) {
+    int size = ids.size();
+    for (int i = 0, s = size; i != s; ++i) {
         if (i < s - 1) {
             out += std::to_string(ids[i]) + " ";
         } else {
@@ -37,13 +49,12 @@ std::string Tokenizer::vector_to_string(std::vector<T> ids) {
     return out;
 }
 
-void Tokenizer::make_alphabet(std::vector<std::wstring> corpus) {
+void Tokenizer::make_alphabet(std::vector<std::wstring>& corpus) {
     for (std::wstring str : corpus) {
         for (wchar_t c : str) {
             if (!vocab.alphabet.contains(c)) {
                 vocab.alphabet.insert(c);
                 std::wstring s = get_string(c);
-                char_to_string[c] = s;
                 size_t id = vocab.size();
                 vocab.insert(s);
                 tokens_to_ids[s] = id;
@@ -64,7 +75,7 @@ std::vector<std::wstring> Tokenizer::split(wchar_t* str, wchar_t* delim) {
     return tokens;
 }
 
-void Tokenizer::compute_word_freqs(std::vector<std::wstring> corpus) noexcept {
+void Tokenizer::compute_word_freqs(std::vector<std::wstring>& corpus) noexcept {
     std::wstring delim = L" ";
     for (std::wstring str : corpus) {
         std::vector<std::wstring> split_tokens = split(str.data(), delim.data());
@@ -119,15 +130,15 @@ std::vector<std::vector<std::wstring> > Tokenizer::make_splits(std::vector<std::
     return splits;
 }
 
-void Tokenizer::merge_pair(std::wstring a, std::wstring b) {
+void Tokenizer::merge_pair(std::wstring first, std::wstring second) {
     for (std::wstring word : words) {
         std::vector<std::wstring> split_chars = splits[word];
         // pair of 2
         if (split_chars.size() > 1) {
             size_t i = 0;
             while (i < split_chars.size() - 1) {
-                if (split_chars[i] == a && split_chars[i + 1] == b) {
-                    split_chars[i] = a + b;
+                if (split_chars[i] == first && split_chars[i + 1] == second) {
+                    split_chars[i] = first + second;
                     split_chars.erase(split_chars.begin() + i + 1);
                     i++;
                 } else {
@@ -139,7 +150,7 @@ void Tokenizer::merge_pair(std::wstring a, std::wstring b) {
     }
 }
 
-void Tokenizer::fit(std::vector<std::wstring> corpus) {
+void Tokenizer::fit(std::vector<std::wstring>& corpus) {
     make_alphabet(corpus);
     compute_word_freqs(corpus);
     make_splits();
@@ -159,9 +170,7 @@ void Tokenizer::fit(std::vector<std::wstring> corpus) {
         std::wcout << most_common_pair.first << most_common_pair.second << std::endl;
         merge_pair(most_common_pair.first, most_common_pair.second);
         std::wstring merged = most_common_pair.first + most_common_pair.second;
-        std::pair<std::wstring, std::wstring> k =
-            std::make_pair(most_common_pair.first, most_common_pair.second);
-        merged_pairs[k] = merged;
+        merged_pairs[std::make_pair(most_common_pair.first, most_common_pair.second)] = merged;
         vocab.insert(merged);
         tokens_to_ids[merged] = vocab.size();
         ids_to_tokens[vocab.size()] = merged;
@@ -228,7 +237,7 @@ std::vector<std::wstring> Tokenizer::tokenize(std::wstring str) {
     return tokens;
 }
 
-std::vector<int> Tokenizer::encode(std::vector<std::wstring> tokens) {
+std::vector<int> Tokenizer::encode(std::vector<std::wstring>& tokens) {
     std::vector<int> input_ids;
     for (std::wstring token : tokens) {
         input_ids.push_back(tokens_to_ids[token]);
@@ -236,7 +245,7 @@ std::vector<int> Tokenizer::encode(std::vector<std::wstring> tokens) {
     return input_ids;
 }
 
-std::vector<std::wstring> Tokenizer::decode(std::vector<int> input_ids) {
+std::vector<std::wstring> Tokenizer::decode(std::vector<int>& input_ids) {
     std::vector<std::wstring> tokens;
     for (size_t id : input_ids) {
         tokens.push_back(ids_to_tokens[id]);
@@ -273,9 +282,9 @@ int main() {
     size_t vocab_sz = 200;
     Vocab vocab(vocab_sz);
     Tokenizer tokenizer(vocab);
-    std::vector<std::wstring> corpus = tokenizer.make_corpus_from_file(L"corpus.txt");
+    std::vector<std::wstring> corpus = tokenizer.make_corpus_from_file(L"/Users/zakhar/Projects/tokenizer/data/corpus.txt");
     tokenizer.fit(corpus);
-    tokenizer.file_to_input_ids(L"wiki.txt");
+    tokenizer.file_to_input_ids(L"/Users/zakhar/Projects/tokenizer/data/wiki.txt");
     std::vector<std::wstring> tkn = tokenizer.tokenize(
         L"The learning materials in this section are written and organised by level. There are "
         L"different types of texts and interactive exercises that practise the reading skills you "
@@ -285,4 +294,6 @@ int main() {
     for (std::wstring s : tkn) {
         std::wcout << s << std::endl;
     }
+    unsigned int all_time = clock();
+    std::cout << "ALL TIME : " << (float)all_time/CLOCKS_PER_SEC << std::endl;
 };

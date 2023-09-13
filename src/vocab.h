@@ -30,5 +30,10 @@ struct Vocab {
         insert(pad_token);
         merge(extra_tokens);
     }
-    Vocab(size_t vocab_size_) : vocab_size(vocab_size_){};
+    Vocab(size_t vocab_size_) : vocab_size(vocab_size_)
+    {
+        if (vocab_size_ < 0) {
+          throw std::logic_error("Vocab size must be positive");
+        }
+    };
 };
