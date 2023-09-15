@@ -26,8 +26,7 @@
 
 | Метод    | Описание   |
 | ----------- | ----------- |
-| ` Vocab(size_t vocab_size_, std::wstring unk_token_, std::wstring eof_token_,
-        std::wstring pad_token_, std::set<std::wstring> extra_tokens_)` | Параметризованный конструктор от размера словаря, unk, pad, eof, extra_tokens|  
+|`Vocab(size_t vocab_size_, std::wstring unk_token_, std::wstring eof_token_,std::wstring pad_token_, std::set<std::wstring> extra_tokens_)` | Параметризованный конструктор от размера словаря, unk, pad, eof, extra_tokens|  
 |`insert(std::wstring token)` | Операция вставки токена в словарь|
 |`merge(std::set<std::wstring> tokens)`| Операция добавления множества токенов в словарь|
 
