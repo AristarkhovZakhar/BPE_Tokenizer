@@ -1,6 +1,5 @@
 #include "tokenizer.h"
 #include <cstring>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <locale>
@@ -292,10 +291,10 @@ int main() {
   Vocab vocab(vocab_sz);
   Tokenizer tokenizer(vocab);
   std::vector<std::wstring> corpus = tokenizer.make_corpus_from_file(
-      L"/Users/zakhar/Projects/tokenizer/data/corpus.txt");
+      L"../data/corpus.txt");
   tokenizer.fit(corpus);
   tokenizer.file_to_input_ids(
-      L"/Users/zakhar/Projects/tokenizer/data/wiki.txt");
+      L"../data/wiki.txt");
   std::vector<std::wstring> tkn =
       tokenizer.tokenize(L"The learning materials in this section are written "
                          L"and organised by level. There are "
@@ -308,6 +307,4 @@ int main() {
   for (std::wstring s : tkn) {
     std::wcout << s << std::endl;
   }
-  unsigned int all_time = clock();
-  std::cout << "ALL TIME : " << (float)all_time / CLOCKS_PER_SEC << std::endl;
 };
