@@ -39,5 +39,5 @@
 |`encode(std::vector<std::wstring>)`|Операция получения вектора индексов из вектора токенов|
 |`decode(std::vector<int> input_ids)`|Операция получения вектора токенов из вектора индексов|
 |`fit(std::vector<std::wstring> &corpus)`|Обучение токенизатора на корпусе текста|
-|`file_to_input_ids(std::wstring file_path)`| Операция токенизации текса в файле (передается filepath, создается новый tokenized_filepath, содержимое которого - индексы токенов)|
+|`file_to_input_ids(std::wstring filepath)`| Операция токенизации текса в файле (передается filepath, создается новый tokenized_filepath, содержимое которого - индексы токенов)|
 
